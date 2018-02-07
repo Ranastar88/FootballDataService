@@ -7,7 +7,7 @@ namespace FootballDataApi.Models
   public class StandingTeam
   {
     public int rank { get; set; }
-    public string team { get; set; }
+    public string teamName { get; set; }
     public int teamId { get; set; }
     public int playedGames { get; set; }
     public string crestURI { get; set; }

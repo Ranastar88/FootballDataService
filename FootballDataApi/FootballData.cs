@@ -1,5 +1,7 @@
-﻿using FootballDataApi.Models;
+﻿using FootballDataApi.BL;
+using FootballDataApi.Models;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -46,9 +48,74 @@ namespace FootballDataApi
       var j = SendRequest("/v1/competitions/" + competitionid + "/teams");
       if (!string.IsNullOrEmpty(j))
       {
-        result = JsonConvert.DeserializeObject<Teams>(j);
+        result = ManagerTeams.ParseTeam(j);
       }
       return result;
+    }
+
+    /// <summary>
+    /// Call api resource: /v1/competitions/{competitionid}/leagueTable
+    /// </summary>
+    /// <param name="competitionid">int</param>
+    /// <returns>LeagueTable</returns>
+    public LeagueTable GetLeagueTable(int competitionid) {
+      var result = new LeagueTable();
+      var j = SendRequest("/v1/competitions/" + competitionid + "/leagueTable");
+      if (!string.IsNullOrEmpty(j))
+      {
+        result = JsonConvert.DeserializeObject<LeagueTable>(j);
+      }
+      return result;
+    }
+
+    /// <summary>
+    /// Call api resource: /v1/competitions/{competitionid}/leagueTable/?matchday={matchday}
+    /// </summary>
+    /// <param name="competitionid">int</param>
+    /// <param name="matchday">int</param>
+    /// <returns>LeagueTable</returns>
+    public LeagueTable GetLeagueTable(int competitionid,int matchday)
+    {
+      var result = new LeagueTable();
+      var j = SendRequest("/v1/competitions/" + competitionid + "/leagueTable?matchday=" + matchday);
+      if (!string.IsNullOrEmpty(j))
+      {
+        result = JsonConvert.DeserializeObject<LeagueTable>(j);
+      }
+      return result;
+    }
+
+    /// <summary>
+    /// Call api resource: /v1/teams/{id}	
+    /// </summary>
+    /// <param name="teamid">int</param>
+    /// <returns>Team</returns>
+    public Team GetTeam(int teamid)
+    {
+      var result = new Team();
+      var j = SendRequest("/v1/teams/" + teamid);
+      if (!string.IsNullOrEmpty(j))
+      {
+        result = JsonConvert.DeserializeObject<Team>(j);
+      }
+      return result;
+    }
+
+    /// <summary>
+    /// Call api resource: /v1/teams/{id}/players
+    /// </summary>
+    /// <param name="teamid">int</param>
+    /// <returns>Players</returns>
+    public Players GetTeamPlayers(int teamid)
+    {
+      var result = new Players();
+      var j = SendRequest("/v1/teams/" + teamid+ "/players");
+      if (!string.IsNullOrEmpty(j))
+      {
+        result = JsonConvert.DeserializeObject<Players>(j, new IsoDateTimeConverter { DateTimeFormat = "yyyy-MM-dd" });
+      }
+      return result;
+
     }
 
     private string SendRequest(string link) {

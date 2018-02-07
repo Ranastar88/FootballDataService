@@ -4,10 +4,9 @@ using System.Text;
 
 namespace FootballDataApi.Models
 {
-  public class Teams
+  public class Score
   {
-    public int count { get; set; }
-    public List<Team> teams { get; set; }
+    public int goalsHomeTeam { get; set; }
+    public int goalsAwayTeam { get; set; }
   }
-
 }
