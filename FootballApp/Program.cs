@@ -14,10 +14,10 @@ namespace FootballApp
     static void Main(string[] args)
     {
       var mng = new FootballData("3f217f062e6c473cb1546d0daca64372");
-      var c = mng.GetTeamsOfCompetition(456);
+      var c = mng.GetTeamsOfCompetition(457);
       foreach (var item in c.teams)
       {
-        Console.WriteLine(item.id + " - " + item.name);
+        Console.WriteLine(item.shortName + " - " + item.name);
       }
       Console.ReadLine();
     }
