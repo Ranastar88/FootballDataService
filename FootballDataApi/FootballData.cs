@@ -115,7 +115,17 @@ namespace FootballDataApi
         result = JsonConvert.DeserializeObject<Players>(j, new IsoDateTimeConverter { DateTimeFormat = "yyyy-MM-dd" });
       }
       return result;
-
+    }
+    
+    public Fixtures GetFixtures(int competitionid,int matchday)
+    {
+      var result = new Fixtures();
+      var j = SendRequest("/v1/competitions/" + competitionid + "/fixtures");
+      if (!string.IsNullOrEmpty(j))
+      {
+        result = JsonConvert.DeserializeObject<Fixtures>(j, new IsoDateTimeConverter { DateTimeFormat = "yyyy-MM-dd" });
+      }
+      return result;
     }
 
     private string SendRequest(string link) {

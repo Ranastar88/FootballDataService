@@ -40,6 +40,12 @@ namespace FootballApp
         Console.WriteLine("#" + item.jerseyNumber.GetValueOrDefault() + " " + item.name + " - " + item.position);
       }
 
+      Console.WriteLine("=========Fixture 1=========");
+      var h = mng.GetFixtures(idcomp,2);
+      foreach (var item in h.fixtures)
+      {
+        Console.WriteLine(item.homeTeamName + " - " + item.awayTeamName);
+      }
       Console.ReadLine();
     }
   }
