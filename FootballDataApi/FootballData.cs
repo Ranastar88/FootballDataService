@@ -116,11 +116,66 @@ namespace FootballDataApi
       }
       return result;
     }
-    
-    public Fixtures GetFixtures(int competitionid,int matchday)
+
+    /// <summary>
+    /// List all fixtures for a certain competition.
+    /// Call api resource: /v1/competitions/{id}/fixtures	
+    /// </summary>
+    /// <param name="competitionid">int</param>
+    /// <returns>Fixtures</returns>
+    public Fixtures GetFixtures(int competitionid)
     {
       var result = new Fixtures();
       var j = SendRequest("/v1/competitions/" + competitionid + "/fixtures");
+      if (!string.IsNullOrEmpty(j))
+      {
+        result = JsonConvert.DeserializeObject<Fixtures>(j, new IsoDateTimeConverter { DateTimeFormat = "yyyy-MM-dd" });
+      }
+      return result;
+    }
+
+    /// <summary>
+    /// List all fixtures for a certain competition.
+    /// Call api resource: /v1/competitions/{id}/fixtures/?matchday=
+    /// </summary>
+    /// <param name="competitionid">int</param>
+    /// <param name="matchday">int</param>
+    /// <returns>Fixtures</returns>
+    public Fixtures GetFixtures(int competitionid,int matchday)
+    {
+      var result = new Fixtures();
+      var j = SendRequest("/v1/competitions/" + competitionid + "/fixtures/?matchday=" + matchday);
+      if (!string.IsNullOrEmpty(j))
+      {
+        result = JsonConvert.DeserializeObject<Fixtures>(j, new IsoDateTimeConverter { DateTimeFormat = "yyyy-MM-dd" });
+      }
+      return result;
+    }
+
+    /// <summary>
+    /// List all fixtures for a certain competition.
+    /// Call api resource: /v1/competitions/{id}/fixtures/?timeFrame=
+    /// </summary>
+    /// <param name="competitionid"></param>
+    /// <param name="tm">TimeFrame: Next or Past either in the past or future</param>
+    /// <param name="dayrange">It is followed by a number in the range 1..99</param>
+    /// <returns>Fixtures</returns>
+    public Fixtures GetFixtures(int competitionid, TimeFrame tm,int dayrange)
+    {
+      if (dayrange > 99) dayrange = 99;
+      if (dayrange < 1) dayrange = 1;
+      string ext = "?";
+      switch (tm)
+      {
+        case TimeFrame.Next:
+          ext += "timeFrame=n" + dayrange;
+          break;
+        case TimeFrame.Past:
+          ext += "timeFrame=p" + dayrange;
+          break;
+      }
+      var result = new Fixtures();
+      var j = SendRequest("/v1/competitions/" + competitionid + "/fixtures/" + ext);
       if (!string.IsNullOrEmpty(j))
       {
         result = JsonConvert.DeserializeObject<Fixtures>(j, new IsoDateTimeConverter { DateTimeFormat = "yyyy-MM-dd" });

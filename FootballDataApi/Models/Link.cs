@@ -4,9 +4,8 @@ using System.Text;
 
 namespace FootballDataApi.Models
 {
-  public class Score
+  public class Link
   {
-    public int? goalsHomeTeam { get; set; }
-    public int? goalsAwayTeam { get; set; }
+    public string href { get; set; }
   }
 }

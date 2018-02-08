@@ -1,4 +1,5 @@
 ﻿using FootballDataApi;
+using FootballDataApi.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -41,10 +42,10 @@ namespace FootballApp
       }
 
       Console.WriteLine("=========Fixture 1=========");
-      var h = mng.GetFixtures(idcomp,2);
+      var h = mng.GetFixtures(idcomp,null, TimeFrame.Next,25);
       foreach (var item in h.fixtures)
       {
-        Console.WriteLine(item.homeTeamName + " - " + item.awayTeamName);
+        Console.WriteLine(item.matchday + "##" + item.homeTeamName + " - " + item.awayTeamName);
       }
       Console.ReadLine();
     }
