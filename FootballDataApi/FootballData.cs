@@ -162,9 +162,41 @@ namespace FootballDataApi
     /// <returns>Fixtures</returns>
     public Fixtures GetFixtures(int competitionid, TimeFrame tm,int dayrange)
     {
+      string ext = "?timeFrame=" + TimeFrameToString(tm, dayrange);
+      
+      var result = new Fixtures();
+      var j = SendRequest("/v1/competitions/" + competitionid + "/fixtures/" + ext);
+      if (!string.IsNullOrEmpty(j))
+      {
+        result = JsonConvert.DeserializeObject<Fixtures>(j, new IsoDateTimeConverter { DateTimeFormat = "yyyy-MM-dd" });
+      }
+      return result;
+    }
+
+    /// <summary>
+    /// List fixtures across a set of competitions.	
+    /// Call api resource: /v1/fixtures/?timeFrame=/p|n[1-9]{1,2}/&league=leagueCode
+    /// </summary>
+    /// <param name="competitionid"></param>
+    /// <param name="tm"></param>
+    /// <param name="dayrange"></param>
+    /// <param name="elencoLeagueCode"></param>
+    /// <returns></returns>
+    public Fixtures GetFixtures(int competitionid, TimeFrame tm, int dayrange,List<string> elencoLeagueCode)
+    {
+      string ext = "?";
+
+      if (elencoLeagueCode != null) {
+        string l = "";
+        foreach (var item in elencoLeagueCode)
+        {
+          l += item + ",";
+        }
+        if (l.Length > 0) ext += "league=" + l.Substring(0, l.Length - 1) + "&";
+      }
+
       if (dayrange > 99) dayrange = 99;
       if (dayrange < 1) dayrange = 1;
-      string ext = "?";
       switch (tm)
       {
         case TimeFrame.Next:
@@ -175,13 +207,48 @@ namespace FootballDataApi
           break;
       }
       var result = new Fixtures();
-      var j = SendRequest("/v1/competitions/" + competitionid + "/fixtures/" + ext);
+      var j = SendRequest("/v1/fixtures/" + ext);
       if (!string.IsNullOrEmpty(j))
       {
         result = JsonConvert.DeserializeObject<Fixtures>(j, new IsoDateTimeConverter { DateTimeFormat = "yyyy-MM-dd" });
       }
       return result;
     }
+
+    public Fixture GetFixture(int fixtureid,int head2head = 10)
+    {
+      var result = new Fixture();
+      var j = SendRequest("/v1/fixtures/" + fixtureid + "?head2head=" + head2head);
+      if (!string.IsNullOrEmpty(j))
+      {
+        result = JsonConvert.DeserializeObject<Fixture>(j, new IsoDateTimeConverter { DateTimeFormat = "yyyy-MM-dd" });
+      }
+      return result;
+    }
+
+    /// <summary>
+    /// Show all fixtures for a certain team.
+    /// Call api resource: /v1/teams/{id}/fixtures/
+    /// </summary>
+    /// <param name="season">int</param>
+    /// <param name="teamid">int</param>
+    /// <param name="venue">home|away</param>
+    /// <param name="tm">TimeFrame</param>
+    /// <param name="dayrange">int</param>
+    /// <returns>Fixtures</returns>
+    public Fixtures GetFixtureTeam(int season,int teamid,Venue? venue,TimeFrame tm,int dayrange)
+    {
+      string ext = string.Empty;
+      if (venue.HasValue) ext = "&venue=" + venue.ToString().ToLower();
+      var result = new Fixtures();
+      var j = SendRequest("/v1/teams/" + teamid + "/fixtures/?season=" + season + "&timeFrame=" + TimeFrameToString(tm,dayrange) + ext);
+      if (!string.IsNullOrEmpty(j))
+      {
+        result = JsonConvert.DeserializeObject<Fixtures>(j, new IsoDateTimeConverter { DateTimeFormat = "yyyy-MM-dd" });
+      }
+      return result;
+    }
+
 
     private string SendRequest(string link) {
       string result;
@@ -191,6 +258,23 @@ namespace FootballDataApi
       {
         StreamReader reader = new StreamReader(stream, Encoding.UTF8);
         result = reader.ReadToEnd();
+      }
+      return result;
+    }
+
+    private string TimeFrameToString(TimeFrame tm, int dayrange)
+    {
+      if (dayrange > 99) dayrange = 99;
+      if (dayrange < 1) dayrange = 1;
+      string result = "";
+      switch (tm)
+      {
+        case TimeFrame.Next:
+          result = "n" + dayrange;
+          break;
+        case TimeFrame.Past:
+          result = "p" + dayrange;
+          break;
       }
       return result;
     }

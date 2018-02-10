@@ -34,6 +34,7 @@ namespace FootballDataApi.Models
     public string homeTeamName { get; set; }
     public string awayTeamName { get; set; }
     public Result result { get; set; }
+    public Head2Head head2head { get; set; }
   }
 
   public class Links
