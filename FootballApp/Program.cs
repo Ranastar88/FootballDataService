@@ -18,17 +18,6 @@ namespace FootballApp
       int idcomp = 456;
    
 
-      //Console.WriteLine("=========Squadra=========");
-      //var f = mng.GetTeam(109);
-      //Console.WriteLine(f.shortName + " - " + f.name);
-
-      //Console.WriteLine("=========Giocatori Squadra=========");
-      //var g = mng.GetTeamPlayers(109);
-      //foreach (var item in g.players)
-      //{
-      //  Console.WriteLine("#" + item.jerseyNumber.GetValueOrDefault() + " " + item.name + " - " + item.position);
-      //}
-
       Console.WriteLine("=========Fixture=========");
       var h = mng.GetFixtures(idcomp, TimeFrame.Next,25,new List<string>() { "SA","SB"});
       foreach (var item in h.fixtures)

@@ -15,7 +15,7 @@ namespace FootballDataApi.Test
     [TestMethod]
     public void Show_One_Fixture()
     {
-      var t = mng.GetFixture(165148);
+      var t = mng.GetFixture(163876);
       Console.WriteLine(t.homeTeamName + " " + t.result.goalsHomeTeam + " - " + " " + t.result.goalsAwayTeam + t.awayTeamName);
     }
   }

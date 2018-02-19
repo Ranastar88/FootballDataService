@@ -23,6 +23,15 @@ namespace FootballDataApi.Test
     }
 
     [TestMethod]
+    public void Show_All_Players_For_Certain_Team() {
+      var g = mng.GetTeamPlayers(IDTEAM);
+      foreach (var item in g.players)
+      {
+        Console.WriteLine("#" + item.jerseyNumber + " " + item.name + " - " + item.position);
+      }
+    }
+
+    [TestMethod]
     public void Show_All_Fixtures_For_Certain_Team()
     {
       var f = mng.GetFixtureTeam(2017,IDTEAM,null,TimeFrame.Next,30);
