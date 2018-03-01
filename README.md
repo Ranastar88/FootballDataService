@@ -16,4 +16,9 @@ http://api.football-data.org/documentation
 ```
 string APIKey = "XXXXXXXXXXXXXXXXXXXXXXXXX"
 var football_ds = = new FootballData(APIKey);
+
+//Example: Get all competitions of 2017
+var c = football_ds.GetCompetitions(2017);
 ```
+Register here for a free API key:
+https://api.football-data.org/client/register
