@@ -11,6 +11,7 @@ namespace FootballDataService.Test
   {
     private FootballData mng;
     private const int IDCOMP = 456;
+    private const int IDTEAM = 109;
 
     public FixturesTest()
     {
@@ -30,6 +31,16 @@ namespace FootballDataService.Test
     public void List_fixtures_across_competitions()
     {
       var h = mng.GetFixtures(456, TimeFrame.Next, 25, new List<string>() { "SA", "SB" });
+      foreach (var item in h.fixtures)
+      {
+        Console.WriteLine(item.id + "##" + item.homeTeamName + " - " + item.awayTeamName);
+      }
+    }
+
+    [TestMethod]
+    public void Show_All_Fixtures_For_Certain_Team()
+    {
+      var h = mng.GetFixturesTeam(2017,IDTEAM,Venue.Home,TimeFrame.Next,10);
       foreach (var item in h.fixtures)
       {
         Console.WriteLine(item.id + "##" + item.homeTeamName + " - " + item.awayTeamName);

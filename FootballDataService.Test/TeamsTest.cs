@@ -35,7 +35,7 @@ namespace FootballDataService.Test
     [TestMethod]
     public void Show_All_Fixtures_For_Certain_Team()
     {
-      var f = mng.GetFixtureTeam(2017,IDTEAM,null,TimeFrame.Next,30);
+      var f = mng.GetFixturesTeam(2017,IDTEAM,null,TimeFrame.Next,30);
       foreach (var item in f.fixtures)
       {
         Console.WriteLine("#" + item.id + " " + item.homeTeamName + " - " + item.awayTeamName);

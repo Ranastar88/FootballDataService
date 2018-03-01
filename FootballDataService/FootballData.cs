@@ -215,13 +215,13 @@ namespace FootballDataService
       return result;
     }
 
-    public Fixture GetFixture(int fixtureid,int head2head = 10)
+    public SingleFixture GetFixture(int fixtureid,int head2head = 10)
     {
-      var result = new Fixture();
+      var result = new SingleFixture();
       var j = SendRequest("/v1/fixtures/" + fixtureid + "?head2head=" + head2head);
       if (!string.IsNullOrEmpty(j))
       {
-        result = JsonConvert.DeserializeObject<Fixture>(j, new IsoDateTimeConverter { DateTimeFormat = "yyyy-MM-dd" });
+        result = JsonConvert.DeserializeObject<SingleFixture>(j, new IsoDateTimeConverter { DateTimeFormat = "yyyy-MM-dd" });
       }
       return result;
     }
@@ -236,7 +236,7 @@ namespace FootballDataService
     /// <param name="tm">TimeFrame</param>
     /// <param name="dayrange">int</param>
     /// <returns>Fixtures</returns>
-    public Fixtures GetFixtureTeam(int season,int teamid,Venue? venue,TimeFrame tm,int dayrange)
+    public Fixtures GetFixturesTeam(int season,int teamid,Venue? venue,TimeFrame tm,int dayrange)
     {
       string ext = string.Empty;
       if (venue.HasValue) ext = "&venue=" + venue.ToString().ToLower();

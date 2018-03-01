@@ -17,7 +17,7 @@ namespace FootballDataService.Test
     public void Show_One_Fixture()
     {
       var t = mng.GetFixture(163876);
-      Console.WriteLine(t.homeTeamName + " " + t.result.goalsHomeTeam + " - " + " " + t.result.goalsAwayTeam + t.awayTeamName);
+      Console.WriteLine(t.fixture.homeTeamName + " " + t.fixture.result.goalsHomeTeam + " - " + " " + t.fixture.result.goalsAwayTeam + t.fixture.awayTeamName);
     }
   }
 }
