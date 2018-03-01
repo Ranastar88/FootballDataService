@@ -7,8 +7,7 @@ NuGet Package
 ```
 PM> Install-Package FootballDataService -Version 1.0.0
 ```
-
-https://www.nuget.org/packages/FootballDataService/1.0.0
+https://www.nuget.org/packages/FootballDataService/1.1.0
 
 ## Usage
 More about filters, structure and API:
