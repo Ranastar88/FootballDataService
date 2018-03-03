@@ -5,23 +5,22 @@ using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace FootballDataService
 {
-  public class FootballData
+  public class FootballDataAsync
   {
     private string _authToken;
     private string _baseUrl = "https://api.football-data.org/";
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="authtoken"></param>
-    public FootballData(string authtoken)
+
+    public FootballDataAsync(string authtoken)
     {
       _authToken = authtoken;
-      if (string.IsNullOrEmpty(_authToken)) throw new Exception("Auth token empty!");
+      if (string.IsNullOrEmpty(_authToken)) throw new Exception("Auth token empty!");      
     }
 
     /// <summary>
@@ -29,10 +28,12 @@ namespace FootballDataService
     /// </summary>
     /// <param name="anno">Year of competitions</param>
     /// <returns>List of competitions of the year</returns>
-    public List<Competition> GetCompetitions(int anno) {
+    public async Task<List<Competition>> GetCompetitionsAsync(int anno)
+    {
       var result = new List<Competition>();
-      var j = SendRequest("/v1/competitions/?season=" + anno);
-      if (!string.IsNullOrEmpty(j)) {
+      var j = await SendRequest("/v1/competitions/?season=" + anno);
+      if (!string.IsNullOrEmpty(j))
+      {
         result = JsonConvert.DeserializeObject<List<Competition>>(j);
       }
       return result;
@@ -43,9 +44,10 @@ namespace FootballDataService
     /// </summary>
     /// <param name="competitionid">int</param>
     /// <returns>List of competition's teams</returns>
-    public Teams GetTeamsOfCompetition(int competitionid) {
+    public async Task<Teams> GetTeamsOfCompetitionAsync(int competitionid)
+    {
       var result = new Teams();
-      var j = SendRequest("/v1/competitions/" + competitionid + "/teams");
+      var j = await SendRequest("/v1/competitions/" + competitionid + "/teams");
       if (!string.IsNullOrEmpty(j))
       {
         result = ManagerTeams.ParseTeam(j);
@@ -58,9 +60,10 @@ namespace FootballDataService
     /// </summary>
     /// <param name="competitionid">int</param>
     /// <returns>LeagueTable</returns>
-    public LeagueTable GetLeagueTable(int competitionid) {
+    public async Task<LeagueTable> GetLeagueTableAsync(int competitionid)
+    {
       var result = new LeagueTable();
-      var j = SendRequest("/v1/competitions/" + competitionid + "/leagueTable");
+      var j = await SendRequest("/v1/competitions/" + competitionid + "/leagueTable");
       if (!string.IsNullOrEmpty(j))
       {
         result = JsonConvert.DeserializeObject<LeagueTable>(j);
@@ -74,10 +77,10 @@ namespace FootballDataService
     /// <param name="competitionid">int</param>
     /// <param name="matchday">int</param>
     /// <returns>LeagueTable</returns>
-    public LeagueTable GetLeagueTable(int competitionid,int matchday)
+    public async Task<LeagueTable> GetLeagueTableAsync(int competitionid, int matchday)
     {
       var result = new LeagueTable();
-      var j = SendRequest("/v1/competitions/" + competitionid + "/leagueTable?matchday=" + matchday);
+      var j = await SendRequest("/v1/competitions/" + competitionid + "/leagueTable?matchday=" + matchday);
       if (!string.IsNullOrEmpty(j))
       {
         result = JsonConvert.DeserializeObject<LeagueTable>(j);
@@ -90,10 +93,10 @@ namespace FootballDataService
     /// </summary>
     /// <param name="teamid">int</param>
     /// <returns>Team</returns>
-    public Team GetTeam(int teamid)
+    public async Task<Team> GetTeamAsync(int teamid)
     {
       var result = new Team();
-      var j = SendRequest("/v1/teams/" + teamid);
+      var j = await SendRequest("/v1/teams/" + teamid);
       if (!string.IsNullOrEmpty(j))
       {
         result = JsonConvert.DeserializeObject<Team>(j);
@@ -106,27 +109,27 @@ namespace FootballDataService
     /// </summary>
     /// <param name="teamid">int</param>
     /// <returns>Players</returns>
-    public Players GetTeamPlayers(int teamid)
+    public async Task<Players> GetTeamPlayersAsync(int teamid)
     {
       var result = new Players();
-      var j = SendRequest("/v1/teams/" + teamid+ "/players");
+      var j = await SendRequest("/v1/teams/" + teamid + "/players");
       if (!string.IsNullOrEmpty(j))
       {
         result = JsonConvert.DeserializeObject<Players>(j, new IsoDateTimeConverter { DateTimeFormat = "yyyy-MM-dd" });
       }
       return result;
     }
-
+    
     /// <summary>
     /// List all fixtures for a certain competition.
     /// Call api resource: /v1/competitions/{id}/fixtures	
     /// </summary>
     /// <param name="competitionid">int</param>
     /// <returns>Fixtures</returns>
-    public Fixtures GetFixtures(int competitionid)
+    public async Task<Fixtures> GetFixturesAsync(int competitionid)
     {
       var result = new Fixtures();
-      var j = SendRequest("/v1/competitions/" + competitionid + "/fixtures");
+      var j = await SendRequest("/v1/competitions/" + competitionid + "/fixtures");
       if (!string.IsNullOrEmpty(j))
       {
         result = JsonConvert.DeserializeObject<Fixtures>(j, new IsoDateTimeConverter { DateTimeFormat = "yyyy-MM-dd" });
@@ -141,17 +144,17 @@ namespace FootballDataService
     /// <param name="competitionid">int</param>
     /// <param name="matchday">int</param>
     /// <returns>Fixtures</returns>
-    public Fixtures GetFixtures(int competitionid,int matchday)
+    public async Task<Fixtures> GetFixturesAsync(int competitionid, int matchday)
     {
       var result = new Fixtures();
-      var j = SendRequest("/v1/competitions/" + competitionid + "/fixtures/?matchday=" + matchday);
+      var j = await SendRequest("/v1/competitions/" + competitionid + "/fixtures/?matchday=" + matchday);
       if (!string.IsNullOrEmpty(j))
       {
         result = JsonConvert.DeserializeObject<Fixtures>(j, new IsoDateTimeConverter { DateTimeFormat = "yyyy-MM-dd" });
       }
       return result;
     }
-
+    
     /// <summary>
     /// List all fixtures for a certain competition.
     /// Call api resource: /v1/competitions/{id}/fixtures/?timeFrame=
@@ -160,12 +163,12 @@ namespace FootballDataService
     /// <param name="tm">TimeFrame: Next or Past either in the past or future</param>
     /// <param name="dayrange">It is followed by a number in the range 1..99</param>
     /// <returns>Fixtures</returns>
-    public Fixtures GetFixtures(int competitionid, TimeFrame tm,int dayrange)
+    public async Task<Fixtures> GetFixturesAsync(int competitionid, TimeFrame tm, int dayrange)
     {
-      string ext = "?timeFrame=" + TimeFrameToString(tm, dayrange);
-      
+      string ext = "?timeFrame=" + Utility.TimeFrameToString(tm, dayrange);
+
       var result = new Fixtures();
-      var j = SendRequest("/v1/competitions/" + competitionid + "/fixtures/" + ext);
+      var j = await SendRequest("/v1/competitions/" + competitionid + "/fixtures/" + ext);
       if (!string.IsNullOrEmpty(j))
       {
         result = JsonConvert.DeserializeObject<Fixtures>(j, new IsoDateTimeConverter { DateTimeFormat = "yyyy-MM-dd" });
@@ -182,11 +185,12 @@ namespace FootballDataService
     /// <param name="dayrange"></param>
     /// <param name="elencoLeagueCode"></param>
     /// <returns></returns>
-    public Fixtures GetFixtures(int competitionid, TimeFrame tm, int dayrange,List<string> elencoLeagueCode)
+    public async Task<Fixtures> GetFixturesAsync(int competitionid, TimeFrame tm, int dayrange, List<string> elencoLeagueCode)
     {
       string ext = "?";
 
-      if (elencoLeagueCode != null) {
+      if (elencoLeagueCode != null)
+      {
         string l = "";
         foreach (var item in elencoLeagueCode)
         {
@@ -207,24 +211,24 @@ namespace FootballDataService
           break;
       }
       var result = new Fixtures();
-      var j = SendRequest("/v1/fixtures/" + ext);
+      var j = await SendRequest("/v1/fixtures/" + ext);
       if (!string.IsNullOrEmpty(j))
       {
         result = JsonConvert.DeserializeObject<Fixtures>(j, new IsoDateTimeConverter { DateTimeFormat = "yyyy-MM-dd" });
       }
       return result;
     }
-
+    
     /// <summary>
     /// Get single fixture
     /// </summary>
     /// <param name="fixtureid"></param>
     /// <param name="head2head"></param>
     /// <returns></returns>
-    public SingleFixture GetFixture(int fixtureid,int head2head = 10)
+    public async Task<SingleFixture> GetFixtureAsync(int fixtureid, int head2head = 10)
     {
       var result = new SingleFixture();
-      var j = SendRequest("/v1/fixtures/" + fixtureid + "?head2head=" + head2head);
+      var j = await SendRequest("/v1/fixtures/" + fixtureid + "?head2head=" + head2head);
       if (!string.IsNullOrEmpty(j))
       {
         result = JsonConvert.DeserializeObject<SingleFixture>(j, new IsoDateTimeConverter { DateTimeFormat = "yyyy-MM-dd" });
@@ -242,12 +246,12 @@ namespace FootballDataService
     /// <param name="tm">TimeFrame</param>
     /// <param name="dayrange">int</param>
     /// <returns>Fixtures</returns>
-    public Fixtures GetFixturesTeam(int season,int teamid,Venue? venue,TimeFrame tm,int dayrange)
+    public async Task<Fixtures> GetFixturesTeamAsync(int season, int teamid, Venue? venue, TimeFrame tm, int dayrange)
     {
       string ext = string.Empty;
       if (venue.HasValue) ext = "&venue=" + venue.ToString().ToLower();
       var result = new Fixtures();
-      var j = SendRequest("/v1/teams/" + teamid + "/fixtures/?season=" + season + "&timeFrame=" + TimeFrameToString(tm,dayrange) + ext);
+      var j = await SendRequest("/v1/teams/" + teamid + "/fixtures/?season=" + season + "&timeFrame=" + Utility.TimeFrameToString(tm, dayrange) + ext);
       if (!string.IsNullOrEmpty(j))
       {
         result = JsonConvert.DeserializeObject<Fixtures>(j, new IsoDateTimeConverter { DateTimeFormat = "yyyy-MM-dd" });
@@ -256,10 +260,13 @@ namespace FootballDataService
     }
 
 
-    private string SendRequest(string link) {
+    #region Helper
+
+    private async Task<string> SendRequest(string link)
+    {
       string result;
       HttpWebRequest myHttpWebRequest = (HttpWebRequest)WebRequest.Create(_baseUrl + link);
-      HttpWebResponse myHttpWebResponse = (HttpWebResponse)myHttpWebRequest.GetResponse();
+      var myHttpWebResponse = await myHttpWebRequest.GetResponseAsync();
       using (Stream stream = myHttpWebResponse.GetResponseStream())
       {
         StreamReader reader = new StreamReader(stream, Encoding.UTF8);
@@ -267,22 +274,6 @@ namespace FootballDataService
       }
       return result;
     }
-
-    private string TimeFrameToString(TimeFrame tm, int dayrange)
-    {
-      if (dayrange > 99) dayrange = 99;
-      if (dayrange < 1) dayrange = 1;
-      string result = "";
-      switch (tm)
-      {
-        case TimeFrame.Next:
-          result = "n" + dayrange;
-          break;
-        case TimeFrame.Past:
-          result = "p" + dayrange;
-          break;
-      }
-      return result;
-    }
+    #endregion
   }
 }

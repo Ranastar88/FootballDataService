@@ -48,6 +48,10 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AsyncTest\CompetitionsTest.cs" />
+    <Compile Include="AsyncTest\TeamsTest.cs" />
+    <Compile Include="AsyncTest\FixtureTest.cs" />
+    <Compile Include="AsyncTest\FixturesTest.cs" />
     <Compile Include="CompetitionsTest.cs" />
     <Compile Include="FixturesTest.cs" />
     <Compile Include="FixtureTest.cs" />
