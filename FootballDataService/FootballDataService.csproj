@@ -48,6 +48,7 @@
     <Compile Include="BL\Utility.cs" />
     <Compile Include="FootballData.cs" />
     <Compile Include="FootballDataAsync.cs" />
+    <Compile Include="Interfaces\IFootballData.cs" />
     <Compile Include="Models\Competition.cs" />
     <Compile Include="Models\Fixture.cs" />
     <Compile Include="Models\Fixtures.cs" />
