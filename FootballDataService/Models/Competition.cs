@@ -4,16 +4,16 @@ using System.Text;
 
 namespace FootballDataService.Models
 {
-  public class Competition
-  {
-    public int id { get; set; }
-    public string caption { get; set; }
-    public string league { get; set; }
-    public string year { get; set; }
-    public int currentMatchday { get; set; }
-    public int numberOfMatchdays { get; set; }
-    public int numberOfTeams { get; set; }
-    public int numberOfGames { get; set; }
-    public DateTime lastUpdated { get; set; }
-  }
+    public class Competition
+    {
+        public int Id { get; set; }
+        public Area Area { get; set; }
+        public string Name { get; set; }
+        public string Code { get; set; }
+        public string Plan { get; set; }
+        public Season CurrentSeason { get; set; }
+        public Season Season { get; set; }
+        public DateTime LastUpdated { get; set; }
+
+    }
 }
